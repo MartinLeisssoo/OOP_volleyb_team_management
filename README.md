@@ -1,92 +1,84 @@
 # Volleyball Coach Application
 
-A management tool that helps coaches evaluate and develop volleyball players, simulate training sessions, and generate personalized skill improvement recommendations based on an ELO rating system.
+**Authors: Martin Leissoo, Lauri Mark Kontson**
+
+## Project Overview
+
+This is a management tool designed to help volleyball coaches evaluate and develop players, simulate training sessions, and generate personalized skill improvement recommendations using a custom ELO-like rating system and skill progression mechanics.
 
 ## Project Description
 
-The Volleyball Coach Application is software designed to help volleyball coaches:
-- Manage team rosters and player profiles
-- Simulate training sessions (serving, attacking, blocking, defending)
-- Analyze player skills and identify weaknesses
-- Generate personalized training recommendations
-- Track player development through ELO rating changes
+The Volleyball Coach Application is software designed to assist volleyball coaches with:
+
+*   Managing multiple team rosters and player profiles.
+*   Adding new teams and selecting the active team to work with.
+*   Simulating training sessions (serving, attacking, blocking, defending).
+*   Analyzing player skills and identifying weaknesses (based on both overall level and recent training performance).
+*   Generating personalized training recommendations based on a player's overall weakest skills.
+*   Tracking player development through ELO rating changes and skill level increases.
 
 ## Installation and Execution
 
-1. Clone the repository:
-```
-git clone https://github.com/username/volleyball-coach.git
-```
-
-2. Navigate to the project directory:
-```
-cd volleyball-coach
-```
-
-3. Compile the project:
-```
-javac *.java
-```
-
-4. Run the application:
-```
-java TreenerRakendus
-```
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/MartinLeisssoo/OOP_volleyb_team_management.git
+    ```
+2.  **Navigate to the project directory:**
+    ```bash
+    cd src
+    ```
+3.  **Compile the project** (assuming all `.java` files are in the same directory or appropriate package structure):
+    ```bash
+    javac *.java
+    ```
+4.  **Run the application:**
+    ```bash
+    java TreenerRakendus
+    ```
 
 ## Usage Guide
 
-After launching the application, you can use the following functions:
+After launching the application, a menu will be displayed where you can choose the following actions (using `JOptionPane` dialog boxes):
 
-1. **Add Player** - Add a new player to your team with their skill levels
-2. **Simulate Training** - Run a training simulation for a selected player and view results
-3. **View Training Recommendations** - Get personalized recommendations for player development
-4. **Show All Players** - View statistics for all players in the team
+1.  **Add Player:** Add a new player to the *active* team with their skill levels.
+2.  **Simulate Training:** Run a training simulation for a selected player in the *active* team. Displays results, skill changes, and ELO change.
+3.  **View Training Recommendations:** Get personalized recommendations for a selected player's development in the *active* team (based on the player's overall weakest skills).
+4.  **Show All Players:** View the statistics (including ELO and skills) for all players in the *active* team.
+5.  **Add New Team:** Create a new team, specifying its name and maximum player capacity.
+6.  **Select Active Team:** Change which team you are currently working with.
+7.  **Show All Teams:** Display a list of all teams in the system and their current player count/capacity.
+8.  **Exit:** Terminate the application.
 
 ## Project Architecture
 
 ### Classes
 
-- **Mängija.java** - Player data model (name, skills, ELO rating)
-- **Võistkond.java** - Team management and player collection
-- **TreeninguTulemus.java** - Training result tracking and analysis
-- **TreeninguSimulaator.java** - Randomized training simulation
-- **TreeninguSoovitaja.java** - Training recommendation engine
-- **TreenerRakendus.java** - Main class with UI and program flow
+*   `Mängija.java`: Player data model (name, skills: serve, attack, block, defense; ELO rating). Includes logic for calculating initial ELO and finding the overall weakest skill.
+*   `Võistkond.java`: Manages a single team, containing an array of players and methods for adding/finding players.
+*   `TreeninguTulemus.java`: Stores and analyzes training results (successes/attempts per skill), calculating overall and individual success rates, and identifying the weakest performance *in that specific training session*.
+*   `TreeninguSimulaator.java`: Performs the randomness-based training simulation, calculates ELO changes, and is responsible for updating player skills based on performance.
+*   `TreeninguSoovitaja.java`: Generates training recommendations based on the player's overall weakest skills (not just the last training session).
+*   `TreenerRakendus.java`: The main application class that manages the user interface (`JOptionPane`), application flow, and holds all teams and the currently active team.
 
-### Performance Rating System
+## Performance Rating System (Custom ELO)
 
-The application uses a simplified ELO-like rating system to track individual skill development. Unlike traditional ELO systems that compare two competitive entities against each other, this adaptation measures performance against fixed standards within the simulation:
+The application uses an ELO-inspired rating system to track individual development. Unlike traditional ELO, which compares two competing entities, this adaptation measures a player's performance in a simulation against an *expectation* derived from their own skill level.
 
-```
-newRating = oldRating + K * (successRate - 0.5)
-```
+*   **Expected Performance:** For each player, an expected success rate (`arvutaOodatavSooritus`) is calculated based on their average skill level. Higher-skilled players are expected to perform better. (Uses formula `0.95 * (1 - Math.exp(-averageSkill / 45.0))`).
+*   **Actual Performance:** During the simulation, the player's actual average success rate (`õnnestumismäär`) is calculated.
+*   **ELO Change:** The change is calculated based on the difference between actual and expected performance (`relativeSuccess = actualRate - expectedRate`), multiplied by a K-factor (currently **K=28**).
+*   **Beginner Protection:** For players with a lower average skill level, ELO loss is reduced if their performance falls below expectations.
+*   **Asymmetry:** Negative ELO changes (losses) are further mitigated (`NEGATIVE_CHANGE_MITIGATION = 0.7`), making it proportionally harder to lose ELO than to gain it for the same performance difference.
 
-Where:
-- K = 32 (adjustment factor)
-- Success rate ranges from 0.0 to 1.0
-- 50% success rate results in no rating change
-- Above 50% success rate increases rating
-- Below 50% success rate decreases rating
-
-This approach creates a performance metric that reflects individual improvement trends rather than competitive ranking against other players. While inspired by ELO concepts, it's tailored specifically for training evaluation rather than competitive matchmaking.
+This approach creates a metric reflecting individual development trends and whether a player is over- or under-performing relative to their potential, rather than just their absolute success.
 
 ## Technical Implementation
 
-The system simulates player performance using Java's Random class to generate outcomes based on skill probabilities. Each training session:
-
-1. Runs 10 simulated attempts for each skill
-2. Calculates success rates for each skill area
-3. Identifies the weakest skill based on performance
-4. Generates targeted recommendations
-5. Adjusts the player's ELO rating
-
-User interaction is handled through JOptionPane dialogs for a simple, accessible interface. Player data is maintained in memory through an array-based implementation rather than collections for simplicity.
-
-## Authors
-
-- Martin Leissoo
-- Lauri Mark Kontson
-
-## Project Context
-
-This project was created for the Object-Oriented Programming course's first team assignment at the University of Tartu, Spring Semester 2025.
+*   **Simulation:** The system simulates player performance using `java.util.Random`. Each training session:
+    *   Runs **10** simulated attempts for each core skill (serve, attack, block, defense).
+    *   Uses a non-linear formula (`simuleeriTegevus`) to determine the success chance for each action, making it harder to achieve 90%+ success rates even with top skills (uses formula `97.0 * (1.0 - Math.exp(- (double)skillLevel / 50.0))`).
+    *   Calculates success rates per skill (`TreeninguTulemus`).
+    *   Identifies the skill with the weakest performance *during that training*.
+*   **Skill Progression:** Player skills can improve (+1 point) if their success rate in that skill during training exceeds a dynamic threshold (`lävend` in `uuendaOskusi`). This threshold is calculated using the formula (`0.3 + 0.7 * Math.pow(skillLevel / 100.0, 5)`), which rises very steeply as the skill approaches 100, making progression at elite levels more difficult.
+*   **User Interface:** User interaction is handled via `javax.swing.JOptionPane` dialog boxes, providing a simple text-based interface.
+*   **Data Structures:** For simplicity, player and team management uses basic Java arrays (`Mängija[]`, `Võistkond[]`) with counters, rather than more complex Collections.
