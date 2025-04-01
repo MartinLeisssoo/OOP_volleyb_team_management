@@ -27,7 +27,7 @@ The Volleyball Coach Application is software designed to assist volleyball coach
     ```bash
     cd src
     ```
-3.  **Compile the project** (assuming all `.java` files are in the same directory or appropriate package structure):
+3.  **Compile the project**:
     ```bash
     javac *.java
     ```
