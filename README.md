@@ -53,14 +53,22 @@ After launching the application, you can use the following functions:
 - **TreeninguSoovitaja.java** - Training recommendation engine
 - **TreenerRakendus.java** - Main class with UI and program flow
 
-### ELO System
+### Performance Rating System
 
-The application uses an ELO rating system with the formula: `newElo = oldElo + K * (successRate - 0.5)`, where:
-- K = 32 (constant)
+The application uses a simplified ELO-like rating system to track individual skill development. Unlike traditional ELO systems that compare two competitive entities against each other, this adaptation measures performance against fixed standards within the simulation:
+
+```
+newRating = oldRating + K * (successRate - 0.5)
+```
+
+Where:
+- K = 32 (adjustment factor)
 - Success rate ranges from 0.0 to 1.0
-- 50% success rate results in no ELO change
-- Above 50% success rate increases ELO
-- Below 50% success rate decreases ELO
+- 50% success rate results in no rating change
+- Above 50% success rate increases rating
+- Below 50% success rate decreases rating
+
+This approach creates a performance metric that reflects individual improvement trends rather than competitive ranking against other players. While inspired by ELO concepts, it's tailored specifically for training evaluation rather than competitive matchmaking.
 
 ## Technical Implementation
 
@@ -82,4 +90,3 @@ User interaction is handled through JOptionPane dialogs for a simple, accessible
 ## Project Context
 
 This project was created for the Object-Oriented Programming course's first team assignment at the University of Tartu, Spring Semester 2025.
-
