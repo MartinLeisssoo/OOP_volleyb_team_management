@@ -25,6 +25,7 @@ The Volleyball Coach Application is software designed to assist volleyball coach
     ```
 2.  **Navigate to the project directory:**
     ```bash
+    cd OOP_volleyb_team_management
     cd src
     ```
 3.  **Compile the project**:
